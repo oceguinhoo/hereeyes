@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria Polaroide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .polaroid-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .polaroid {
+            width: 200px;
+            background: white;
+            padding: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            border-bottom: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .caption {
+            margin-top: 10px;
+            font-family: 'Georgia', serif;
+            font-size: 1.1em;
+            font-style: italic;
+            color: #555;
+        }
+
+        .date {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Galeria de Fotos Estilo Polaroide</h1>
+    <div id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*" />
+        <input type="text" id="captionInput" placeholder="Nome da foto" />
+        <input type="date" id="dateInput" />
+        <button onclick="addPolaroid()">Adicionar Foto</button>
+    </div>
+    <div class="polaroid-container" id="polaroidContainer"></div>
+
+    <script>
+        function createElement(tag, className, textContent = '') {
+            const element = document.createElement(tag);
+            if (className) element.classList.add(className);
+            if (textContent) element.textContent = textContent;
+            return element;
+        }
+
+        function addPolaroid() {
+            const fileInput = document.getElementById("fileInput").files[0];
+            const captionText = document.getElementById("captionInput").value;
+            const dateText = document.getElementById("dateInput").value;
+
+            if (!fileInput) {
+                alert("Selecione uma imagem para o upload.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const polaroid = createElement("div", "polaroid");
+
+                const img = createElement("img");
+                img.src = e.target.result;
+
+                const caption = createElement("div", "caption", captionText);
+                const date = createElement("div", "date", dateText ? new Date(dateText).toLocaleDateString() : "");
+
+                polaroid.append(img, caption, date);
+                document.getElementById("polaroidContainer").appendChild(polaroid);
+
+                document.getElementById("fileInput").value = "";
+                document.getElementById("captionInput").value = "";
+                document.getElementById("dateInput").value = "";
+            };
+
+            reader.readAsDataURL(fileInput);
+        }
+    </script>
+</body>
+</html>
